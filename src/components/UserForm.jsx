@@ -27,7 +27,7 @@ const UserForm = ({ defaultData }) => {
   const submitForm = (data) => {
     const payload = {
       ...data,
-      id: getUsersResponse[getUsersResponse?.length]?.id,
+      id: getUsersResponse[getUsersResponse?.length]?.id + 1,
     };
     dispatch(addNewUser(payload));
   };
