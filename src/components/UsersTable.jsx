@@ -2,26 +2,41 @@ import React, { useEffect, useState } from "react";
 import { Button, Table, Spinner } from "react-bootstrap";
 import DeleteModal from "./DeleteModal";
 import { useDispatch } from "react-redux";
-import { getUsers } from "../redux/actions/user.action";
+import { deleteUser, getUsers } from "../redux/actions/user.action";
 import { useSelector } from "react-redux";
 
 const UsersTable = () => {
   const dispatch = useDispatch();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [currUser, setCurrUser] = useState(null);
 
-  const { getUsersLoading, getUsersResponse } = useSelector(
-    ({ UserReducer }) => {
-      return {
-        getUsersLoading: UserReducer?.getUsersLoading,
-        getUsersResponse: UserReducer?.getUsersResponse,
-      };
-    }
-  );
+  const {
+    getUsersLoading,
+    getUsersResponse,
+    deleteUserLoading,
+    deleteUserSuccess,
+  } = useSelector(({ UserReducer }) => {
+    return {
+      getUsersLoading: UserReducer?.getUsersLoading,
+      getUsersResponse: UserReducer?.getUsersResponse,
+    };
+  });
+
+  useEffect(() => {
+    deleteUserSuccess &&
+      dispatch({ type: "DELETE_USER", payload: currUser?.id });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [deleteUserSuccess]);
 
   useEffect(() => {
     dispatch(getUsers());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const handleDelete = () => {
+    dispatch(deleteUser(currUser?.id));
+    setShowDeleteModal(false);
+  };
 
   return (
     <>
@@ -52,12 +67,15 @@ const UsersTable = () => {
                 <td>
                   <Button variant="primary me-3" size="sm">
                     {" "}
-                    <i className="ri-more-2-fill"></i> Edit
+                    <i className="ri-pencil-fill"></i> Edit
                   </Button>
                   <Button
                     variant="danger"
                     size="sm"
-                    onClick={() => setShowDeleteModal(true)}>
+                    onClick={() => {
+                      setShowDeleteModal(true);
+                      setCurrUser(user);
+                    }}>
                     <i className="ri-delete-bin-5-fill"></i> Delete
                   </Button>{" "}
                 </td>
@@ -67,6 +85,8 @@ const UsersTable = () => {
           <DeleteModal
             show={showDeleteModal}
             handleClose={() => setShowDeleteModal(!showDeleteModal)}
+            handleDelete={handleDelete}
+            loading={deleteUserLoading}
           />
         </Table>
       )}
