@@ -6,7 +6,6 @@ import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "remixicon/fonts/remixicon.css";
-import "react-toastify/dist/ReactToastify.css";
 import "./index.css";
 import { Provider } from "react-redux";
 import { store } from "./redux/store";

@@ -7,7 +7,6 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { addNewUser, editUser } from "../redux/actions/user.action";
 import { useNavigate } from "react-router-dom";
-import { toast, ToastContainer } from "react-toastify";
 
 const UserForm = ({ defaultData }) => {
   const navigate = useNavigate();
@@ -47,7 +46,6 @@ const UserForm = ({ defaultData }) => {
 
   useEffect(() => {
     if (addUserSuccess || editUserSuccess) {
-      toast.success("User Added Successfully");
       navigate("/");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -132,7 +130,6 @@ const UserForm = ({ defaultData }) => {
           )}
         </Button>
       </Form>
-      <ToastContainer />
     </>
   );
 };
