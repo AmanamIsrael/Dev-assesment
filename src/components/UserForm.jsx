@@ -25,8 +25,10 @@ const UserForm = ({ defaultData }) => {
   } = useForm({ resolver: useYupValidationResolver(validationSchema) });
 
   const submitForm = (data) => {
-    const newId = Math.floor(Math.random() * 100) + 11;
-    const payload = { ...data, id: newId };
+    const payload = {
+      ...data,
+      id: getUsersResponse[getUsersResponse?.length]?.id,
+    };
     dispatch(addNewUser(payload));
   };
 
@@ -34,15 +36,15 @@ const UserForm = ({ defaultData }) => {
     dispatch(editUser(data, defaultData.id));
   };
 
-  const { addUserLoading, editUserLoading, addUserSuccess } = useSelector(
-    ({ UserReducer }) => {
+  const { addUserLoading, editUserLoading, addUserSuccess, getUsersResponse } =
+    useSelector(({ UserReducer }) => {
       return {
         addUserLoading: UserReducer?.addUserLoading,
         editUserLoading: UserReducer?.editUserLoading,
         addUserSuccess: UserReducer?.addUserSuccess,
+        getUsersResponse: UserReducer?.getUsersResponse,
       };
-    }
-  );
+    });
 
   useEffect(() => {
     if (addUserSuccess) {
