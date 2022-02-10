@@ -41,6 +41,7 @@ const UserReducer = (state = APP_STATE, actions) => {
       return {
         ...state,
         addUserLoading: false,
+        addUserSuccess: actions.payload,
         getUsersResponse: [...state.getUsersResponse, actions.payload.data],
         addUserFailure: null,
       };
@@ -103,9 +104,9 @@ const UserReducer = (state = APP_STATE, actions) => {
         editUserFailure: null,
         editUserLoading: false,
       };
-      //sort users
-    case (actionType.SORT_USER):
-      return {...state, getUsersResponse: actions.payload}
+    //sort users
+    case actionType.SORT_USER:
+      return { ...state, getUsersResponse: actions.payload };
     //default state
     default:
       return { ...state };

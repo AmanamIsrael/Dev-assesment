@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Form, Button, Spinner } from "react-bootstrap";
 import * as Yup from "yup";
 import { useForm } from "react-hook-form";
@@ -6,8 +6,10 @@ import { useYupValidationResolver } from "../helpers/yupValidationResolver";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { addNewUser, editUser } from "../redux/actions/user.action";
+import { useNavigate } from "react-router-dom";
 
 const UserForm = ({ defaultData }) => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const validationSchema = Yup.object({
     email: Yup.string().required("please enter your email"),
@@ -32,12 +34,22 @@ const UserForm = ({ defaultData }) => {
     dispatch(editUser(data, defaultData.id));
   };
 
-  const { addUserLoading, editUserLoading } = useSelector(({ UserReducer }) => {
-    return {
-      addUserLoading: UserReducer?.addUserLoading,
-      editUserLoading: UserReducer?.editUserLoading
-    };
-  });
+  const { addUserLoading, editUserLoading, addUserSuccess } = useSelector(
+    ({ UserReducer }) => {
+      return {
+        addUserLoading: UserReducer?.addUserLoading,
+        editUserLoading: UserReducer?.editUserLoading,
+        addUserSuccess: UserReducer?.addUserSuccess,
+      };
+    }
+  );
+
+  useEffect(() => {
+    if (addUserSuccess) {
+      navigate("/");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [addUserSuccess]);
 
   return (
     <>
@@ -109,10 +121,13 @@ const UserForm = ({ defaultData }) => {
           </div>
         </Form.Group>
         <Button variant="primary d-flex align-items-center" type="submit">
-          {defaultData? "Save Changes" : "Add user"}{"   "}
+          {defaultData ? "Save Changes" : "Add user"}
+          {"   "}
           {addUserLoading || editUserLoading ? (
             <Spinner animation="border" size="sm" variant="light" />
-          ) : ""}
+          ) : (
+            ""
+          )}
         </Button>
       </Form>
     </>
