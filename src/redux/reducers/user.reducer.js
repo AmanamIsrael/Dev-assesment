@@ -107,6 +107,9 @@ const UserReducer = (state = APP_STATE, actions) => {
     //sort users
     case actionType.SORT_USER:
       return { ...state, getUsersResponse: actions.payload };
+    //reset state
+    case actionType.CLEAR_STATE:
+      return { ...state, editUserSuccess: null, addUserSuccess: null };
     //default state
     default:
       return { ...state };

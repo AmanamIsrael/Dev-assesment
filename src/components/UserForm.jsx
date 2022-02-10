@@ -34,22 +34,22 @@ const UserForm = ({ defaultData }) => {
     dispatch(editUser(data, defaultData.id));
   };
 
-  const { addUserLoading, editUserLoading, addUserSuccess, editUserSuccess } =
-    useSelector(({ UserReducer }) => {
+  const { addUserLoading, editUserLoading, addUserSuccess } = useSelector(
+    ({ UserReducer }) => {
       return {
         addUserLoading: UserReducer?.addUserLoading,
         editUserLoading: UserReducer?.editUserLoading,
         addUserSuccess: UserReducer?.addUserSuccess,
-        editUserSuccess: UserReducer?.editUserSuccess,
       };
-    });
+    }
+  );
 
   useEffect(() => {
-    if (addUserSuccess || editUserSuccess) {
+    if (addUserSuccess) {
       navigate("/");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [addUserSuccess, editUserSuccess]);
+  }, [addUserSuccess]);
 
   return (
     <>

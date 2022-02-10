@@ -8,6 +8,7 @@ export const actionType = {
   DELETE_USER: "DELETE_USER",
   EDIT_USER: "EDIT_USER",
   SORT_USER: "SORT_USER",
+  CLEAR_STATE: "CLEAR_STATE",
 };
 
 export const getUsers = createAsyncAction(actionType.GET_USER, async () => {
@@ -46,3 +47,7 @@ export const sortUsers = createAsyncAction(
     }
   }
 );
+
+export const resetState = createAsyncAction(actionType.CLEAR_STATE, () => {
+  return null;
+});
