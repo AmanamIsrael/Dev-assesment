@@ -81,7 +81,7 @@ const UsersTable = () => {
                 <td>{user?.name}</td>
                 <td>{user?.username}</td>
                 <td>{user?.email}</td>
-                <td>{user?.address?.city}</td>
+                <td>{user?.address?.city || user?.city}</td>
                 <td>
                   <Button
                     variant="primary me-3"
