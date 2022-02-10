@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { addNewUser, editUser } from "../redux/actions/user.action";
 import { useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
 
 const UserForm = ({ defaultData }) => {
   const navigate = useNavigate();
@@ -34,22 +35,23 @@ const UserForm = ({ defaultData }) => {
     dispatch(editUser(data, defaultData.id));
   };
 
-  const { addUserLoading, editUserLoading, addUserSuccess } = useSelector(
-    ({ UserReducer }) => {
+  const { addUserLoading, editUserLoading, addUserSuccess, editUserSuccess } =
+    useSelector(({ UserReducer }) => {
       return {
         addUserLoading: UserReducer?.addUserLoading,
         editUserLoading: UserReducer?.editUserLoading,
         addUserSuccess: UserReducer?.addUserSuccess,
+        editUserSuccess: UserReducer?.editUserSuccess,
       };
-    }
-  );
+    });
 
   useEffect(() => {
-    if (addUserSuccess) {
+    if (addUserSuccess || editUserSuccess) {
+      toast.success("User Added Successfully");
       navigate("/");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [addUserSuccess]);
+  }, [addUserSuccess, editUserSuccess]);
 
   return (
     <>
@@ -130,6 +132,7 @@ const UserForm = ({ defaultData }) => {
           )}
         </Button>
       </Form>
+      <ToastContainer />
     </>
   );
 };
