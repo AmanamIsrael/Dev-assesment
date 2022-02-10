@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react";
 import { Button, Table, Spinner, Dropdown } from "react-bootstrap";
 import DeleteModal from "./DeleteModal";
 import { useDispatch } from "react-redux";
-import {deleteUser, getUsers, sortUsers} from "../redux/actions/user.action";
+import { deleteUser, getUsers } from "../redux/actions/user.action";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import {sortAsc} from "../helpers/utils";
+import { sortAsc } from "../helpers/utils";
 
 const UsersTable = () => {
   const dispatch = useDispatch();
@@ -37,7 +37,7 @@ const UsersTable = () => {
   const sort = (type) => {
     // dispatch(sortUsers(type, getUsersResponse))
     console.log(sortAsc(getUsersResponse));
-  }
+  };
 
   return (
     <>
