@@ -1,6 +1,6 @@
 import { REQUEST, FAILURE, SUCCESS } from "../actionType.util";
 import { actionType } from "../actions/user.action";
-import { deleteUtil } from "./../../helpers/utils";
+import { deleteUtil, editUtil } from "../../helpers/utils";
 
 const APP_STATE = {
   getUsersResponse: null,
@@ -63,9 +63,10 @@ const UserReducer = (state = APP_STATE, actions) => {
       return {
         ...state,
         deleteUserLoading: false,
+        deleteUserSuccess: true,
         getUsersResponse: deleteUtil(
           [...state.getUsersResponse],
-          actions.payload
+          actions.payload.id
         ),
         deleteUserFailure: null,
       };
@@ -76,6 +77,35 @@ const UserReducer = (state = APP_STATE, actions) => {
         deleteUserSuccess: null,
         deleteUserFailure: actions.payload,
       };
+    //edit user
+    case REQUEST(actionType.EDIT_USER):
+      return {
+        ...state,
+        editUserLoading: true,
+        editUserSuccess: null,
+        editUserFailure: null,
+      };
+    case SUCCESS(actionType.EDIT_USER):
+      return {
+        ...state,
+        editUserLoading: false,
+        editUserSuccess: actions.payload.data,
+        getUsersResponse: editUtil(
+          [...state.getUsersResponse],
+          actions.payload.data
+        ),
+        editUserFailure: null,
+      };
+    case FAILURE(actionType.EDIT_USER):
+      return {
+        ...state,
+        editUserSuccess: null,
+        editUserFailure: null,
+        editUserLoading: false,
+      };
+      //sort users
+    case (actionType.SORT_USER):
+      return {...state, getUsersResponse: actions.payload}
     //default state
     default:
       return { ...state };

@@ -11,7 +11,7 @@ function App() {
     <div className="container my-3">
       <Routes>
         <Route path="/" element={<Dashboard />} />
-        <Route path="/edit" element={<EditUser />} />
+        <Route path="/edit/:id" element={<EditUser />} />
         <Route path="/add" element={<AddUser />} />
         <Route path="*" element={<NotFound />} />
       </Routes>

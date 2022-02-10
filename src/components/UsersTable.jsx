@@ -1,35 +1,31 @@
 import React, { useEffect, useState } from "react";
-import { Button, Table, Spinner } from "react-bootstrap";
+import { Button, Table, Spinner, Dropdown } from "react-bootstrap";
 import DeleteModal from "./DeleteModal";
 import { useDispatch } from "react-redux";
-import { deleteUser, getUsers } from "../redux/actions/user.action";
+import {deleteUser, getUsers, sortUsers} from "../redux/actions/user.action";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import {sortAsc} from "../helpers/utils";
 
 const UsersTable = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [currUser, setCurrUser] = useState(null);
 
-  const {
-    getUsersLoading,
-    getUsersResponse,
-    deleteUserLoading,
-    deleteUserSuccess,
-  } = useSelector(({ UserReducer }) => {
-    return {
-      getUsersLoading: UserReducer?.getUsersLoading,
-      getUsersResponse: UserReducer?.getUsersResponse,
-    };
-  });
+  const { getUsersLoading, getUsersResponse, deleteUserLoading } = useSelector(
+    ({ UserReducer }) => {
+      return {
+        getUsersLoading: UserReducer?.getUsersLoading,
+        getUsersResponse: UserReducer?.getUsersResponse,
+      };
+    }
+  );
 
   useEffect(() => {
-    deleteUserSuccess &&
-      dispatch({ type: "DELETE_USER", payload: currUser?.id });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [deleteUserSuccess]);
-
-  useEffect(() => {
-    dispatch(getUsers());
+    if (!getUsersResponse) {
+      dispatch(getUsers());
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -37,6 +33,11 @@ const UsersTable = () => {
     dispatch(deleteUser(currUser?.id));
     setShowDeleteModal(false);
   };
+
+  const sort = (type) => {
+    // dispatch(sortUsers(type, getUsersResponse))
+    console.log(sortAsc(getUsersResponse));
+  }
 
   return (
     <>
@@ -50,7 +51,26 @@ const UsersTable = () => {
             <tr>
               <th>Id</th>
               <th>Name</th>
-              <th>Username</th>
+              <th className="d-flex">
+                Username
+                <Dropdown>
+                  <Dropdown.Toggle
+                    variant="outline-secondary ms-2"
+                    size="sm"
+                    id="dropdown-basic">
+                    Sort
+                  </Dropdown.Toggle>
+
+                  <Dropdown.Menu>
+                    <Dropdown.Item onClick={() => sort("asc")}>
+                      <i className="ri-sort-asc"></i> Sort ASC
+                    </Dropdown.Item>
+                    <Dropdown.Item onClick={() => sort("dsc")}>
+                      <i className="ri-sort-desc"></i> Sort DSC
+                    </Dropdown.Item>
+                  </Dropdown.Menu>
+                </Dropdown>
+              </th>
               <th>Email</th>
               <th>City</th>
               <th>Actions</th>
@@ -65,7 +85,10 @@ const UsersTable = () => {
                 <td>{user?.email}</td>
                 <td>{user?.address?.city}</td>
                 <td>
-                  <Button variant="primary me-3" size="sm">
+                  <Button
+                    variant="primary me-3"
+                    size="sm"
+                    onClick={() => navigate(`/edit/${user.id}`)}>
                     {" "}
                     <i className="ri-pencil-fill"></i> Edit
                   </Button>

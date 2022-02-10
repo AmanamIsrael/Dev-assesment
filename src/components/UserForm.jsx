@@ -2,12 +2,12 @@ import React from "react";
 import { Form, Button, Spinner } from "react-bootstrap";
 import * as Yup from "yup";
 import { useForm } from "react-hook-form";
-import { useYupValidationResolver } from "./../helpers/yupValidationResolver";
+import { useYupValidationResolver } from "../helpers/yupValidationResolver";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-import { addNewUser } from "../redux/actions/user.action";
+import { addNewUser, editUser } from "../redux/actions/user.action";
 
-const UserForm = () => {
+const UserForm = ({ defaultData }) => {
   const dispatch = useDispatch();
   const validationSchema = Yup.object({
     email: Yup.string().required("please enter your email"),
@@ -28,15 +28,22 @@ const UserForm = () => {
     dispatch(addNewUser(payload));
   };
 
-  const { addUserLoading } = useSelector(({ UserReducer }) => {
+  const editForm = (data) => {
+    dispatch(editUser(data, defaultData.id));
+  };
+
+  const { addUserLoading, editUserLoading } = useSelector(({ UserReducer }) => {
     return {
       addUserLoading: UserReducer?.addUserLoading,
+      editUserLoading: UserReducer?.editUserLoading
     };
   });
 
   return (
     <>
-      <Form validated={false} onSubmit={handleSubmit(submitForm)}>
+      <Form
+        validated={false}
+        onSubmit={handleSubmit(defaultData ? editForm : submitForm)}>
         <Form.Group className="mb-3" controlId="fullName">
           <label htmlFor="fullname" className="mb-1">
             Full Name
@@ -45,6 +52,7 @@ const UserForm = () => {
             className="form-control"
             id="fullname"
             type="text"
+            defaultValue={defaultData?.name}
             placeholder="Enter your full name"
             {...register("name")}
           />
@@ -60,6 +68,7 @@ const UserForm = () => {
             className="form-control"
             id="username"
             type="text"
+            defaultValue={defaultData?.username}
             placeholder="Enter your user name"
             {...register("username")}
           />
@@ -75,6 +84,7 @@ const UserForm = () => {
             className="form-control"
             id="email"
             type="text"
+            defaultValue={defaultData?.email}
             placeholder="Enter your email"
             {...register("email")}
           />
@@ -90,6 +100,7 @@ const UserForm = () => {
             className="form-control"
             id="city"
             type="text"
+            defaultValue={defaultData?.address?.city || defaultData?.city}
             placeholder="Enter your city"
             {...register("city")}
           />
@@ -98,10 +109,10 @@ const UserForm = () => {
           </div>
         </Form.Group>
         <Button variant="primary d-flex align-items-center" type="submit">
-          Add new user{"   "}
-          {addUserLoading && (
+          {defaultData? "Save Changes" : "Add user"}{"   "}
+          {addUserLoading || editUserLoading ? (
             <Spinner animation="border" size="sm" variant="light" />
-          )}
+          ) : ""}
         </Button>
       </Form>
     </>
